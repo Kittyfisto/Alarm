@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Alarm"
+                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
+                    xmlns:ui="clr-namespace:Alarm.UI">
+
+    <local:RemainingTimeConverter x:Key="RemainingTimeConverter" />
+    <local:NullOrEmptyStringToDashConverter x:Key="NullOrEmptyStringToDashConverter" />
+
+    <DataTemplate DataType="{x:Type ui:AlarmViewModel}">
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger
+                            Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}"
+                            Value="0">
+                            <Setter Property="Background" Value="#CCCCCC" />
+                        </DataTrigger>
+                        <DataTrigger
+                            Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}"
+                            Value="1">
+                            <Setter Property="Background" Value="Transparent" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}"
+                                           Value="0" />
+                                <Condition Binding="{Binding IsOverdue}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="#FF6668" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}"
+                                           Value="1" />
+                                <Condition Binding="{Binding IsOverdue}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="#FF4245" />
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Grid Margin="16,8,16,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="SampleNumber" />
+                    <ColumnDefinition SharedSizeGroup="Device" />
+                    <ColumnDefinition SharedSizeGroup="Temperature" />
+                    <ColumnDefinition SharedSizeGroup="RemainingTime" />
+                    <ColumnDefinition Width="64" />
+                </Grid.ColumnDefinitions>
+
+                <controls:FlatTextBlock Text="{Binding SampleId, StringFormat='#{0}'}"
+                                        VerticalAlignment="Center"
+                                        FontSize="24" />
+                <controls:FlatTextBlock Text="{Binding DeviceName, Converter={StaticResource NullOrEmptyStringToDashConverter}}"
+                                        FontSize="24"
+                                        Margin="16,0,16,0"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="1" />
+                <controls:FlatTextBlock Text="{Binding Temperature}"
+                                        FontSize="24"
+                                        Margin="16,0,16,0"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="2" />
+                <controls:FlatTextBlock
+                    Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    Grid.Column="3" />
+
+                <controls:TrashButton Command="{Binding RemoveCommand}"
+                                      Width="48"
+                                      Height="48"
+                                      Grid.Column="4" />
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

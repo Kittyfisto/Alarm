@@ -3,10 +3,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Alarm"
+        xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
+        xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
+        xmlns:ui="clr-namespace:Alarm.UI"
+        d:DataContext="{d:DesignInstance ui:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="MainWindow"
+        Height="600" Width="1000">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Alarm;component/AddAlarmDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Alarm;component/AlarmsDataTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolTrueToCollapsedConverter x:Key="BoolTrueToCollapsedConverter" />
+            <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="8">
+        <Grid Visibility="{Binding AddingAlarm, Converter={StaticResource BoolTrueToCollapsedConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ContentPresenter Content="{Binding AlarmsViewModel}" />
+            <controls:AddButton Grid.Row="1"
+                                Width="128"
+                                Height="128"
+                                HorizontalAlignment="Right"
+                                Command="{Binding AddAlarmCommand}"/>
+        </Grid>
+        <Grid Visibility="{Binding AddingAlarm, Converter={StaticResource BoolFalseToCollapsedConverter}}">
+            <ContentPresenter Content="{Binding AddAlarmViewModel}" />
+        </Grid>
     </Grid>
 </Window>
