@@ -39,9 +39,10 @@
                            Grid.Column="3" />
             </Grid>
 
-            <ItemsControl ItemsSource="{Binding Alarms}"
-                          Grid.Row="1"
-                          AlternationCount="2" />
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding Alarms}"
+                              AlternationCount="2" />
+            </ScrollViewer>
 
             <TextBlock Text="Alle Proben wurden entnommen"
                        VerticalAlignment="Center"
