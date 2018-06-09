@@ -119,13 +119,13 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Margin="0,8,8,0"
-                        Command="{Binding CancelCommand}">
-                    <controls:FlatTextBlock Text="Abbrechen"
+                        Command="{Binding AddAlarmCommand}">
+                    <controls:FlatTextBlock Text="Hinzufügen"
                                             FontSize="32" />
                 </Button>
                 <Button Margin="0,8,0,0"
-                        Command="{Binding AddAlarmCommand}">
-                    <controls:FlatTextBlock Text="Hinzufügen"
+                        Command="{Binding CancelCommand}">
+                    <controls:FlatTextBlock Text="Abbrechen"
                                             FontSize="32" />
                 </Button>
             </StackPanel>
