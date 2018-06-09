@@ -14,25 +14,42 @@ namespace Alarm.UI
 	{
 		private readonly DelegateCommand2 _addAlarmCommand;
 		private readonly IReadOnlyList<DeviceViewModel> _availableDevices;
+		private readonly IReadOnlyList<int> _availableTemperatures;
 		private readonly ICommand _cancelCommand;
-		private readonly Devices _devices;
 
 		private TimeSpan? _estimatedRuntime;
 		private int? _numberOfIterations;
 		private string _sampleId;
 		private DeviceViewModel _selectedDevice;
-		private int? _temperature;
 
-		public AddAlarmViewModel(Devices devices)
+		private int? _selectedTemperature;
+
+		public AddAlarmViewModel(Configuration configuration)
 		{
-			_devices = devices;
 			_addAlarmCommand = new DelegateCommand2(OnAddAlarm);
 			_cancelCommand = new DelegateCommand2(OnCancel);
 
-			_availableDevices = devices.All.Select(x => new DeviceViewModel(x)).ToList();
+			_availableDevices = configuration.Devices.Select(x => new DeviceViewModel(x)).ToList();
 			SelectedDevice = _availableDevices.FirstOrDefault();
 
+			_availableTemperatures = configuration.Temperatures.OrderBy(x => x).ToList();
+			SelectedTemperature = _availableTemperatures.FirstOrDefault();
+
 			UpdateAddButton();
+		}
+
+		public int? SelectedTemperature
+		{
+			get => _selectedTemperature;
+			set
+			{
+				if (value == _selectedTemperature)
+					return;
+
+				_selectedTemperature = value;
+				EmitPropertyChanged();
+				UpdateAddButton();
+			}
 		}
 
 		public DeviceViewModel SelectedDevice
@@ -48,6 +65,8 @@ namespace Alarm.UI
 				UpdateEstimatedRuntime();
 			}
 		}
+
+		public IReadOnlyList<int> AvailableTemperatures => _availableTemperatures;
 
 		public IReadOnlyList<DeviceViewModel> AvailableDevices => _availableDevices;
 
@@ -96,21 +115,7 @@ namespace Alarm.UI
 		public ICommand AddAlarmCommand => _addAlarmCommand;
 		public ICommand CancelCommand => _cancelCommand;
 
-		public DateTime EndTime => DateTime.Now + EstimatedRuntime.Value;
-
-		public int? Temperature
-		{
-			get => _temperature;
-			set
-			{
-				if (value == _temperature)
-					return;
-
-				_temperature = value;
-				EmitPropertyChanged();
-				UpdateAddButton();
-			}
-		}
+		public DateTime EndTime => DateTime.UtcNow + EstimatedRuntime.Value;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event Action<BusinessLogic.Alarm> AddAlarm;
@@ -121,7 +126,7 @@ namespace Alarm.UI
 			_addAlarmCommand.CanBeExecuted = _sampleId != null &&
 			                                 _numberOfIterations != null &&
 			                                 _selectedDevice != null &&
-			                                 _temperature != null;
+			                                 _selectedTemperature != null;
 		}
 
 		private void OnCancel()
@@ -136,7 +141,8 @@ namespace Alarm.UI
 				SampleId = _sampleId,
 				EndTime = EndTime,
 				DeviceId = _selectedDevice.Id,
-				Temperature = Temperature.Value
+				Temperature = _selectedTemperature.Value,
+				SoundAlarm = true
 			};
 			AddAlarm?.Invoke(alarm);
 			SampleId = null;

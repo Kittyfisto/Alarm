@@ -15,11 +15,11 @@ namespace Alarm.UI
 		private readonly Storage _storage;
 		private bool _addingAlarm;
 
-		public MainWindowViewModel(Dispatcher dispatcher, Storage storage, Devices devices, AlarmSound alarmSound)
+		public MainWindowViewModel(Dispatcher dispatcher, Storage storage, Configuration configuration, AlarmSound alarmSound)
 		{
 			_storage = storage;
-			_alarmsViewModel = new AlarmsViewModel(dispatcher, storage, devices, alarmSound);
-			_addAlarmViewModel = new AddAlarmViewModel(devices);
+			_alarmsViewModel = new AlarmsViewModel(dispatcher, storage, configuration, alarmSound);
+			_addAlarmViewModel = new AddAlarmViewModel(configuration);
 			_addAlarmViewModel.AddAlarm += AddAlarm;
 			_addAlarmViewModel.Cancel += CancelAddAlarm;
 		}

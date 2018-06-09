@@ -12,7 +12,7 @@ namespace Alarm.UI
 		: INotifyPropertyChanged
 	{
 		private readonly ObservableCollection<AlarmViewModel> _alarms;
-		private readonly Devices _devices;
+		private readonly Configuration _configuration;
 		private readonly AlarmSound _alarmSound;
 		private readonly Dispatcher _dispatcher;
 		private readonly Storage _storage;
@@ -20,12 +20,12 @@ namespace Alarm.UI
 
 		public AlarmsViewModel(Dispatcher dispatcher,
 		                       Storage storage,
-		                       Devices devices,
+		                       Configuration configuration,
 		                       AlarmSound alarmSound)
 		{
 			_dispatcher = dispatcher;
 			_storage = storage;
-			_devices = devices;
+			_configuration = configuration;
 			_alarmSound = alarmSound;
 			_alarms = new ObservableCollection<AlarmViewModel>();
 
@@ -57,20 +57,22 @@ namespace Alarm.UI
 
 			await _dispatcher.BeginInvoke(new Action(() =>
 			{
-				foreach (var viewModel in viewModels) Add(viewModel);
+				foreach (var viewModel in viewModels)
+					Add(viewModel);
 			}));
 		}
 
 		public void Update()
 		{
-			var isOverdue = false;
+			var playAlarm = false;
 			foreach (var alarm in _alarms)
 			{
 				alarm.Update();
-				isOverdue |= alarm.IsOverdue;
+				if (alarm.IsOverdue && alarm.SoundAlarm)
+					playAlarm = true;
 			}
 
-			if (isOverdue)
+			if (playAlarm)
 				PlayAlarm();
 			else
 				StopAlarm();
@@ -100,14 +102,14 @@ namespace Alarm.UI
 		private void Add(AlarmViewModel viewModel)
 		{
 			_alarms.Add(viewModel);
-			_alarms.Sort((lhs, rhs) => lhs.RemainingTime.CompareTo(rhs.RemainingTime));
+			_alarms.Sort((lhs, rhs) => lhs.EndTime.CompareTo(rhs.EndTime));
 			HasAlarms = true;
 		}
 
 		private AlarmViewModel CreateViewModel(Guid id, BusinessLogic.Alarm alarm)
 		{
-			_devices.TryGetDevice(alarm.DeviceId, out var device);
-			var viewModel = new AlarmViewModel(id, alarm, device);
+			_configuration.TryGetDevice(alarm.DeviceId, out var device);
+			var viewModel = new AlarmViewModel(_storage, id, alarm, device);
 			viewModel.Remove += OnRemoveAlarm;
 			return viewModel;
 		}

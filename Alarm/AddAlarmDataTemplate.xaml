@@ -42,18 +42,20 @@
                                         FontSize="32"
                                         Grid.Row="1"
                                         Grid.Column="0" />
-                <ComboBox ItemsSource="{Binding AvailableDevices}"
-                          SelectedItem="{Binding SelectedDevice}"
-                          Margin="4"
-                          Grid.Row="1"
-                          Grid.Column="1">
-                    <ComboBox.ItemTemplate>
+
+                <controls:ItemsToggleButton Margin="4"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            ItemsSource="{Binding AvailableDevices}"
+                                            SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                    <controls:ItemsToggleButton.ItemTemplate>
                         <DataTemplate DataType="{x:Type ui:DeviceViewModel}">
                             <controls:FlatTextBlock Text="{Binding Name}"
-                                                    FontSize="32" />
+                                                    Margin="6"
+                                                    FontSize="28" />
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                    </controls:ItemsToggleButton.ItemTemplate>
+                </controls:ItemsToggleButton>
 
                 <controls:FlatTextBlock Text="# Durchläufe: "
                                         VerticalAlignment="Center"
@@ -84,7 +86,22 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Right"
                                         Grid.Row="3" />
-                <StackPanel Grid.Row="3"
+
+                <controls:ItemsToggleButton Margin="4"
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            ItemsSource="{Binding AvailableTemperatures}"
+                                            SelectedItem="{Binding SelectedTemperature, Mode=TwoWay}">
+                    <controls:ItemsToggleButton.ItemTemplate>
+                        <DataTemplate>
+                            <controls:FlatTextBlock Text="{Binding Path='',StringFormat={}{0}°C}"
+                                                    Margin="6"
+                                                    FontSize="28" />
+                        </DataTemplate>
+                    </controls:ItemsToggleButton.ItemTemplate>
+                </controls:ItemsToggleButton>
+
+                <!--<StackPanel Grid.Row="3"
                             Grid.Column="1"
                             Orientation="Horizontal">
                     <controls:EditorTextBox Text="{Binding Temperature, UpdateSourceTrigger=PropertyChanged}"
@@ -95,7 +112,7 @@
                                             FontSize="32" />
                     <controls:FlatTextBlock FontSize="32"
                                             Text="°C" />
-                </StackPanel>
+                </StackPanel>-->
             </Grid>
 
             <StackPanel Grid.Row="1"

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Reflection;
 using System.Xml;
+using log4net;
 
 namespace Alarm.BusinessLogic
 {
 	public sealed class Device
 	{
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public TimeSpan CycleTime { get; set; }
@@ -43,8 +47,25 @@ namespace Alarm.BusinessLogic
 				}
 			}
 
-			if (id == null || cycleTime == null)
+			IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;
+			int lineNumber = xmlInfo.LineNumber;
+			if (id == null)
 			{
+				Log.WarnFormat("Missing id, skipping device on line '{0}'...", lineNumber);
+				device = null;
+				return false;
+			}
+
+			if (name == null)
+			{
+				Log.WarnFormat("Missing name, skipping device on line '{0}'...", lineNumber);
+				device = null;
+				return false;
+			}
+
+			if (cycleTime == null)
+			{
+				Log.WarnFormat("Missing cycleTime, skipping device on line '{0}'...", lineNumber);
 				device = null;
 				return false;
 			}

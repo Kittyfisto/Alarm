@@ -19,8 +19,10 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="SampleNumber" />
                     <ColumnDefinition SharedSizeGroup="Device" />
-                    <ColumnDefinition SharedSizeGroup="Temperature" />
+                    <ColumnDefinition Width="128" />
                     <ColumnDefinition SharedSizeGroup="RemainingTime" />
+                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="64" />
                     <ColumnDefinition Width="64" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Probennummer"
@@ -29,11 +31,11 @@
                            Margin="16,0,16,0"
                            FontSize="32"
                            Grid.Column="1" />
-                <TextBlock Text="Temperatur"
+                <TextBlock Text="Temp."
                            FontSize="32"
-                           Margin="16,0,16,0"
+                           Margin="0,0,16,0"
                            Grid.Column="2" />
-                <TextBlock Text="Verbleibende Zeit"
+                <TextBlock Text="ETA"
                            TextWrapping="Wrap"
                            FontSize="32"
                            Grid.Column="3" />

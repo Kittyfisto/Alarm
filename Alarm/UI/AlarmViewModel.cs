@@ -10,27 +10,29 @@ namespace Alarm.UI
 	public sealed class AlarmViewModel
 		: INotifyPropertyChanged
 	{
-		private TimeSpan _remainingTime;
-		private readonly ICommand _removeCommand;
-		private readonly Guid _id;
 		private readonly BusinessLogic.Alarm _alarm;
 		private readonly Device _device;
+		private readonly Guid _id;
+		private readonly ICommand _removeCommand;
+		private readonly Storage _storage;
 		private bool _isOverdue;
+		private TimeSpan _remainingTime;
 
-		public AlarmViewModel(Guid id, BusinessLogic.Alarm alarm, Device device)
+		public AlarmViewModel(Storage storage,
+		                      Guid id,
+		                      BusinessLogic.Alarm alarm,
+		                      Device device)
 		{
+			_storage = storage;
 			_id = id;
 			_alarm = alarm;
 			_device = device;
 			_removeCommand = new DelegateCommand2(OnRemove);
 		}
 
-		private void OnRemove()
-		{
-			Remove?.Invoke(this);
-		}
-
 		public string SampleId => _alarm.SampleId;
+
+		public DateTime EndTime => _alarm.EndTime;
 
 		public TimeSpan RemainingTime
 		{
@@ -47,11 +49,6 @@ namespace Alarm.UI
 			}
 		}
 
-		public void Update()
-		{
-			RemainingTime = _alarm.EndTime.ToLocalTime() - DateTime.Now;
-		}
-
 		public ICommand RemoveCommand => _removeCommand;
 
 		public Guid Id => _id;
@@ -59,10 +56,6 @@ namespace Alarm.UI
 		public string DeviceName => _device?.Name;
 
 		public string Temperature => string.Format("{0}°C", _alarm.Temperature);
-
-		public event Action<AlarmViewModel> Remove;
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		public bool IsOverdue
 		{
@@ -76,6 +69,40 @@ namespace Alarm.UI
 				EmitPropertyChanged();
 			}
 		}
+
+		public bool SoundAlarm
+		{
+			get => _alarm.SoundAlarm;
+			set
+			{
+				if (value == _alarm.SoundAlarm)
+					return;
+
+				_alarm.SoundAlarm = value;
+				EmitPropertyChanged();
+
+				_storage.Update(_id, _alarm);
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public override string ToString()
+		{
+			return _alarm.ToString();
+		}
+
+		private void OnRemove()
+		{
+			Remove?.Invoke(this);
+		}
+
+		public void Update()
+		{
+			RemainingTime = _alarm.EndTime.ToLocalTime() - DateTime.Now;
+		}
+
+		public event Action<AlarmViewModel> Remove;
 
 		private void EmitPropertyChanged([CallerMemberName] string propertyName = null)
 		{

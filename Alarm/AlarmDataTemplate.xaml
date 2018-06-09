@@ -4,6 +4,7 @@
                     xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
                     xmlns:ui="clr-namespace:Alarm.UI">
 
+    <local:EndTimeConverter x:Key="EndTimeConverter" />
     <local:RemainingTimeConverter x:Key="RemainingTimeConverter" />
     <local:NullOrEmptyStringToDashConverter x:Key="NullOrEmptyStringToDashConverter" />
 
@@ -46,8 +47,10 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="SampleNumber" />
                     <ColumnDefinition SharedSizeGroup="Device" />
-                    <ColumnDefinition SharedSizeGroup="Temperature" />
+                    <ColumnDefinition Width="128" />
                     <ColumnDefinition SharedSizeGroup="RemainingTime" />
+                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="64" />
                     <ColumnDefinition Width="64" />
                 </Grid.ColumnDefinitions>
 
@@ -64,6 +67,7 @@
                                         Margin="16,0,16,0"
                                         VerticalAlignment="Center"
                                         Grid.Column="2" />
+
                 <controls:FlatTextBlock
                     Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}"
                     TextWrapping="Wrap"
@@ -71,10 +75,23 @@
                     FontSize="24"
                     Grid.Column="3" />
 
+                <controls:FlatTextBlock
+                    Text="{Binding EndTime, Converter={StaticResource EndTimeConverter}}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    Grid.Column="4" />
+
+                <controls:AlarmToggleButton Width="48"
+                                            Height="48"
+                                            VerticalAlignment="Center"
+                                            IsChecked="{Binding SoundAlarm}"
+                                            Grid.Column="5" />
+
                 <controls:TrashButton Command="{Binding RemoveCommand}"
                                       Width="48"
                                       Height="48"
-                                      Grid.Column="4" />
+                                      Grid.Column="6" />
             </Grid>
         </Grid>
     </DataTemplate>

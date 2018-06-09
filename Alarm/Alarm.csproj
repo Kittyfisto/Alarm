@@ -45,8 +45,8 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Metrolib, Version=0.3.0.107, Culture=neutral, PublicKeyToken=951c63ca832f7094, processorArchitecture=MSIL">
-      <HintPath>..\packages\Metrolib.0.3.0.107\lib\net45\Metrolib.dll</HintPath>
+    <Reference Include="Metrolib, Version=0.3.0.112, Culture=neutral, PublicKeyToken=951c63ca832f7094, processorArchitecture=MSIL">
+      <HintPath>..\packages\Metrolib.0.3.0.112\lib\net45\Metrolib.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.3.7.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.3.7\lib\net40\protobuf-net.dll</HintPath>
@@ -73,9 +73,10 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="BusinessLogic\Alarm.cs" />
     <Compile Include="BusinessLogic\Device.cs" />
-    <Compile Include="BusinessLogic\Devices.cs" />
+    <Compile Include="BusinessLogic\Configuration.cs" />
     <Compile Include="BusinessLogic\Storage.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="EndTimeConverter.cs" />
     <Compile Include="NullOrEmptyStringToDashConverter.cs" />
     <Compile Include="ObservableCollectionExtensions.cs" />
     <Compile Include="UI\DeviceViewModel.cs" />

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using IsabelDb;
+using log4net;
 
 namespace Alarm.BusinessLogic
 {
 	public sealed class Storage
 		: IDisposable
 	{
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		private readonly SerialTaskScheduler _scheduler;
 		private IsabelDb.IDictionary<Guid, Alarm> _alarms;
 		private IDatabase _database;
@@ -34,10 +38,21 @@ namespace Alarm.BusinessLogic
 		{
 			return _scheduler.StartNew(() =>
 			{
-				Directory.CreateDirectory(Constants.ApplicationData);
-				var databasePath = Path.Combine(Constants.ApplicationData, "Storage.db");
-				_database = Database.OpenOrCreate(databasePath, new[] {typeof(Alarm)});
-				_alarms = _database.GetDictionary<Guid, Alarm>("Alarms");
+				try
+				{
+					var databasePath = Path.Combine(Constants.ApplicationData, "Storage.db");
+					Log.InfoFormat("Opening alarm database '{0}'...", databasePath);
+
+					Directory.CreateDirectory(Constants.ApplicationData);
+					_database = Database.OpenOrCreate(databasePath, new[] {typeof(Alarm)});
+					_alarms = _database.GetDictionary<Guid, Alarm>("Alarms");
+
+					Log.InfoFormat("Alarm database opened!");
+				}
+				catch (Exception e)
+				{
+					Log.FatalFormat("Unable to open alarm database: {0}", e);
+				}
 			});
 		}
 
@@ -49,13 +64,51 @@ namespace Alarm.BusinessLogic
 		public Guid Add(Alarm alarm)
 		{
 			var id = Guid.NewGuid();
-			_scheduler.StartNew(() => { _alarms.Put(id, alarm); });
+			_scheduler.StartNew(() =>
+			{
+				try
+				{
+					_alarms.Put(id, alarm);
+				}
+				catch (Exception e)
+				{
+					Log.ErrorFormat("Caught unexpected exception: {0}", e);
+				}
+			});
 			return id;
 		}
 
 		public void Remove(Guid alarmId)
 		{
-			_scheduler.StartNew(() => { _alarms.Remove(alarmId); });
+			_scheduler.StartNew(() =>
+			{
+				try
+				{
+					_alarms.Remove(alarmId);
+				}
+				catch (Exception e)
+				{
+					Log.ErrorFormat("Caught unexpected exception: {0}", e);
+				}
+			});
+		}
+
+		public void Update(Guid id, Alarm alarm)
+		{
+			var clone = alarm.Clone();
+			Log.DebugFormat("Storing alarm '{0}': {1}...", id, clone);
+			_scheduler.StartNew(() =>
+			{
+				try
+				{
+					_alarms.Put(id, clone);
+					Log.DebugFormat("Alarm stored");
+				}
+				catch (Exception e)
+				{
+					Log.ErrorFormat("Caught unexpected exception: {0}", e);
+				}
+			});
 		}
 	}
 }

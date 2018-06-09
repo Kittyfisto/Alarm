@@ -8,7 +8,7 @@ namespace Alarm
 	{
 		public static readonly string ApplicationData;
 		public static readonly string ApplicationLogFile;
-		public static readonly string DevicesFile;
+		public static readonly string ConfigurationFile;
 		public static readonly string ProgramFiles;
 		public static readonly string AlarmSoundFile;
 
@@ -17,7 +17,7 @@ namespace Alarm
 			var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 			ApplicationData = Path.Combine(appData, "Alarms");
 			ApplicationLogFile = Path.Combine(ApplicationData, "Alarm.log");
-			DevicesFile = Path.Combine(ApplicationData, "Devices.xml");
+			ConfigurationFile = Path.Combine(ApplicationData, "Configuration.xml");
 
 			ProgramFiles = AssemblyDirectory;
 			AlarmSoundFile = Path.Combine(ProgramFiles, "Alarm.wav");
