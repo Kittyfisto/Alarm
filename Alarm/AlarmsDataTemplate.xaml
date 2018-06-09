@@ -22,8 +22,8 @@
                     <ColumnDefinition Width="128" />
                     <ColumnDefinition SharedSizeGroup="RemainingTime" />
                     <ColumnDefinition Width="128" />
-                    <ColumnDefinition Width="64" />
-                    <ColumnDefinition Width="64" />
+                    <ColumnDefinition Width="128" />
+                    <ColumnDefinition Width="128" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Probennummer"
                            FontSize="32" />

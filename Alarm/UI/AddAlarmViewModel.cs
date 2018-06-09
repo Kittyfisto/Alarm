@@ -142,7 +142,7 @@ namespace Alarm.UI
 				EndTime = EndTime,
 				DeviceId = _selectedDevice.Id,
 				Temperature = _selectedTemperature.Value,
-				SoundAlarm = true
+				SoundAlarm = false //< Customer wants sounds disabled by default
 			};
 			AddAlarm?.Invoke(alarm);
 			SampleId = null;
