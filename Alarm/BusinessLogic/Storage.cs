@@ -16,6 +16,7 @@ namespace Alarm.BusinessLogic
 
 		private readonly SerialTaskScheduler _scheduler;
 		private IsabelDb.IDictionary<Guid, Alarm> _alarms;
+		private IsabelDb.IDictionary<Guid, Device2> _devices;
 		private IDatabase _database;
 
 		public Storage()
@@ -44,8 +45,9 @@ namespace Alarm.BusinessLogic
 					Log.InfoFormat("Opening alarm database '{0}'...", databasePath);
 
 					Directory.CreateDirectory(Constants.ApplicationData);
-					_database = Database.OpenOrCreate(databasePath, new[] {typeof(Alarm)});
+					_database = Database.OpenOrCreate(databasePath, new[] {typeof(Alarm), typeof(Device2)});
 					_alarms = _database.GetDictionary<Guid, Alarm>("Alarms");
+					_devices = _database.GetDictionary<Guid, Device2>("Devices");
 
 					Log.InfoFormat("Alarm database opened!");
 				}
@@ -59,6 +61,11 @@ namespace Alarm.BusinessLogic
 		public Task<IEnumerable<KeyValuePair<Guid, Alarm>>> GetAllAlarms()
 		{
 			return _scheduler.StartNew(() => _alarms.GetAll());
+		}
+
+		public Task<IEnumerable<KeyValuePair<Guid, Device2>>> GetAllDevices()
+		{
+			return _scheduler.StartNew(() => _devices.GetAll());
 		}
 
 		public Guid Add(Alarm alarm)

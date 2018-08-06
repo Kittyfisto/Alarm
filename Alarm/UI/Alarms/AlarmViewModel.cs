@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Alarm.BusinessLogic;
 using Metrolib;
 
-namespace Alarm.UI
+namespace Alarm.UI.Alarms
 {
 	public sealed class AlarmViewModel
 		: INotifyPropertyChanged

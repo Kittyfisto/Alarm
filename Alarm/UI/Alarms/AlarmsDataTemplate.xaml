@@ -1,0 +1,72 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:Metrolib.Converters;assembly=Metrolib"
+                    xmlns:alarms="clr-namespace:Alarm.UI.Alarms"
+                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AlarmDataTemplate.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:BoolTrueToCollapsedConverter x:Key="BoolTrueToCollapsedConverter" />
+
+    <DataTemplate DataType="{x:Type alarms:AlarmsViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="SampleNumber" />
+                        <ColumnDefinition SharedSizeGroup="Device" />
+                        <ColumnDefinition Width="128" />
+                        <ColumnDefinition SharedSizeGroup="RemainingTime" />
+                        <ColumnDefinition Width="128" />
+                        <ColumnDefinition Width="128" />
+                        <ColumnDefinition Width="128" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Probennummer"
+                               FontSize="32" />
+                    <TextBlock Text="Gerät"
+                               Margin="16,0,16,0"
+                               FontSize="32"
+                               Grid.Column="1" />
+                    <TextBlock Text="Temp."
+                               FontSize="32"
+                               Margin="0,0,16,0"
+                               Grid.Column="2" />
+                    <TextBlock Text="ETA"
+                               TextWrapping="Wrap"
+                               FontSize="32"
+                               Grid.Column="3" />
+                </Grid>
+
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl ItemsSource="{Binding Alarms}"
+                                  AlternationCount="2" />
+                </ScrollViewer>
+
+                <TextBlock Text="Alle Proben wurden entnommen"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Grid.Row="1"
+                           FontSize="32"
+                           Foreground="#AAAAAA"
+                           Visibility="{Binding HasAlarms, Converter={StaticResource BoolTrueToCollapsedConverter}}" />
+            </Grid>
+
+            <controls:AddButton Grid.Row="1"
+                                Width="128"
+                                Height="128"
+                                HorizontalAlignment="Right"
+                                Command="{Binding AddAlarmCommand}"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

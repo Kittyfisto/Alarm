@@ -5,12 +5,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Alarm.BusinessLogic;
+using Alarm.UI.Devices;
 using Metrolib;
 
-namespace Alarm.UI
+namespace Alarm.UI.Alarms
 {
 	public sealed class AddAlarmViewModel
-		: INotifyPropertyChanged
+		: IPageViewModel
+		, INotifyPropertyChanged
 	{
 		private readonly DelegateCommand2 _addAlarmCommand;
 		private readonly IReadOnlyList<DeviceViewModel> _availableDevices;
@@ -161,5 +163,14 @@ namespace Alarm.UI
 			else
 				EstimatedRuntime = null;
 		}
+
+		#region Implementation of IPageViewModel
+
+		public string Name => "Alarm hinzufügen";
+
+		public void Update()
+		{}
+
+		#endregion
 	}
 }

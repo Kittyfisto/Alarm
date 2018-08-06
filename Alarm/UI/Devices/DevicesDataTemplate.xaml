@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
+                    xmlns:devices="clr-namespace:Alarm.UI.Devices">
+
+    <DataTemplate DataType="{x:Type devices:DevicesViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="DeviceName" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Gerätename"
+                           FontSize="32" />
+            </Grid>
+
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding Devices}"
+                              AlternationCount="2" />
+            </ScrollViewer>
+
+            <controls:AddButton Grid.Row="2"
+                                Width="128"
+                                Height="128"
+                                HorizontalAlignment="Right"
+                                Command="{Binding AddDeviceCommand}"/>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

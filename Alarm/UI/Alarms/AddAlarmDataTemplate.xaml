@@ -1,12 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-                    xmlns:ui="clr-namespace:Alarm.UI"
-                    xmlns:alarm="clr-namespace:Alarm">
+                    xmlns:alarm="clr-namespace:Alarm"
+                    xmlns:alarms="clr-namespace:Alarm.UI.Alarms"
+                    xmlns:devices="clr-namespace:Alarm.UI.Devices">
 
     <alarm:RemainingTimeConverter x:Key="RemainingTimeConverter" />
 
-    <DataTemplate DataType="{x:Type ui:AddAlarmViewModel}">
+    <DataTemplate DataType="{x:Type alarms:AddAlarmViewModel}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -49,7 +50,7 @@
                                             ItemsSource="{Binding AvailableDevices}"
                                             SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
                     <controls:ItemsToggleButton.ItemTemplate>
-                        <DataTemplate DataType="{x:Type ui:DeviceViewModel}">
+                        <DataTemplate DataType="{x:Type devices:DeviceViewModel}">
                             <controls:FlatTextBlock Text="{Binding Name}"
                                                     Margin="6"
                                                     FontSize="28" />

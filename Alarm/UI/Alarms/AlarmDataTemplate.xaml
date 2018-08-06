@@ -2,13 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Alarm"
                     xmlns:controls="clr-namespace:Metrolib.Controls;assembly=Metrolib"
-                    xmlns:ui="clr-namespace:Alarm.UI">
+                    xmlns:alarms="clr-namespace:Alarm.UI.Alarms">
 
     <local:EndTimeConverter x:Key="EndTimeConverter" />
     <local:RemainingTimeConverter x:Key="RemainingTimeConverter" />
     <local:NullOrEmptyStringToDashConverter x:Key="NullOrEmptyStringToDashConverter" />
 
-    <DataTemplate DataType="{x:Type ui:AlarmViewModel}">
+    <DataTemplate DataType="{x:Type alarms:AlarmViewModel}">
         <Grid>
             <Grid.Style>
                 <Style TargetType="Grid">

@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using Alarm.BusinessLogic;
 
-namespace Alarm.UI
+namespace Alarm.UI.Devices
 {
 	public sealed class DeviceViewModel
 	{

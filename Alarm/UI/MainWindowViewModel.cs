@@ -1,65 +1,56 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using System.Windows.Threading;
 using Alarm.BusinessLogic;
-using Metrolib;
+using Alarm.UI.Devices;
+using log4net;
 
 namespace Alarm.UI
 {
 	public sealed class MainWindowViewModel
 		: INotifyPropertyChanged
 	{
-		private readonly AddAlarmViewModel _addAlarmViewModel;
-		private readonly AlarmsViewModel _alarmsViewModel;
+		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		private readonly Configuration _configuration;
+		private readonly AlarmSound _alarmSound;
+		private readonly Dispatcher _dispatcher;
 		private readonly Storage _storage;
+		private readonly Stack<IPageViewModel> _pages;
+
+		private IPageViewModel _currentPage;
 		private bool _addingAlarm;
 
 		public MainWindowViewModel(Dispatcher dispatcher, Storage storage, Configuration configuration, AlarmSound alarmSound)
 		{
+			_dispatcher = dispatcher;
 			_storage = storage;
-			_alarmsViewModel = new AlarmsViewModel(dispatcher, storage, configuration, alarmSound);
-			_addAlarmViewModel = new AddAlarmViewModel(configuration);
-			_addAlarmViewModel.AddAlarm += AddAlarm;
-			_addAlarmViewModel.Cancel += CancelAddAlarm;
+			_configuration = configuration;
+			_alarmSound = alarmSound;
+			_pages = new Stack<IPageViewModel>();
+
+			ShowPage(new MainPageViewModel(dispatcher, storage, configuration, alarmSound, this));
 		}
 
-		public AlarmsViewModel AlarmsViewModel => _alarmsViewModel;
-
-		public AddAlarmViewModel AddAlarmViewModel => _addAlarmViewModel;
-
-		public bool AddingAlarm
+		public IPageViewModel CurrentPage
 		{
-			get => _addingAlarm;
+			get => _currentPage;
 			private set
 			{
-				if (value == _addingAlarm)
+				if (value == _currentPage)
 					return;
 
-				_addingAlarm = value;
+				_currentPage = value;
 				EmitPropertyChanged();
 			}
 		}
 
-		public ICommand AddAlarmCommand => new DelegateCommand2(OnAddAlarm);
-
 		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void CancelAddAlarm()
-		{
-			AddingAlarm = false;
-		}
 
 		private void AddAlarm(BusinessLogic.Alarm alarm)
 		{
-			var id = _storage.Add(alarm);
-			_alarmsViewModel.Add(id, alarm);
-			AddingAlarm = false;
-		}
-
-		private void OnAddAlarm()
-		{
-			AddingAlarm = true;
 		}
 
 		private void EmitPropertyChanged([CallerMemberName] string propertyName = null)
@@ -69,7 +60,32 @@ namespace Alarm.UI
 
 		public void Update()
 		{
-			_alarmsViewModel.Update();
+			CurrentPage?.Update();
+		}
+
+		public void ShowPage(IPageViewModel page)
+		{
+			_pages.Push(page);
+			CurrentPage = page;
+		}
+
+		public void Back(IPageViewModel page)
+		{
+			if (!Equals(CurrentPage, page))
+			{
+				Log.WarnFormat("Expected current page '{0}' to be '{1}'! Won't navigate back since it's obviously not!", CurrentPage, page);
+				return;
+			}
+
+			_pages.Pop();
+			if (_pages.Count > 0)
+			{
+				CurrentPage = _pages.Peek();
+			}
+			else
+			{
+				CurrentPage = null;
+			}
 		}
 	}
 }

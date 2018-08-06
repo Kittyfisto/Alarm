@@ -14,30 +14,15 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Alarm;component/AddAlarmDataTemplate.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Alarm;component/AlarmsDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Alarm;component/UI/MainPageDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Alarm;component/UI/Alarms/AddAlarmDataTemplate.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Alarm;component/UI/Devices/AddDeviceDataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:BoolTrueToCollapsedConverter x:Key="BoolTrueToCollapsedConverter" />
-            <converters:BoolFalseToCollapsedConverter x:Key="BoolFalseToCollapsedConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
     <Grid Margin="8">
-        <Grid Visibility="{Binding AddingAlarm, Converter={StaticResource BoolTrueToCollapsedConverter}}">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ContentPresenter Content="{Binding AlarmsViewModel}" />
-            <controls:AddButton Grid.Row="1"
-                                Width="128"
-                                Height="128"
-                                HorizontalAlignment="Right"
-                                Command="{Binding AddAlarmCommand}"/>
-        </Grid>
-        <Grid Visibility="{Binding AddingAlarm, Converter={StaticResource BoolFalseToCollapsedConverter}}">
-            <ContentPresenter Content="{Binding AddAlarmViewModel}" />
-        </Grid>
+        <ContentPresenter Content="{Binding CurrentPage}" />
     </Grid>
 </Window>
